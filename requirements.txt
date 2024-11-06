@@ -1,0 +1,13 @@
+xue
+pytest
+uvicorn
+fastapi
+aiofiles
+greenlet
+aiosqlite
+sqlalchemy
+watchfiles
+ruamel.yaml
+httpx[http2]
+cryptography
+python-multipart
