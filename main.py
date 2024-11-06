@@ -2,16 +2,20 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, FileResponse
 from xue import HTML, Head, Body, Div, xue_initialize, Script
 from xue.components import input, button, card
-import anthropic
-import asyncio
-import base64
-from io import BytesIO
+from ModelMerge.src.ModelMerge import claude3
 
 app = FastAPI()
 xue_initialize(tailwind=True)
 
+from dotenv import load_dotenv
+load_dotenv()
+import os
+api_key = os.environ.get('API')
+api_url = os.environ.get('API_URL', 'https://api.openai.com/v1/chat/completions')
+engine = os.environ.get('ENGINE', 'gpt-4-turbo')
+
 # 初始化 Claude API 客户端
-claude = anthropic.AsyncAnthropic(api_key="your-api-key")
+claude = claude3(api_key=api_key, api_url=api_url, engine=engine, print_log=True, use_plugins=False)
 
 @app.get("/", response_class=HTMLResponse)
 async def root():
@@ -110,7 +114,7 @@ async def generate_logo(request: Request):
     try:
         # 调用 Claude API
         response = await claude.messages.create(
-            model="claude-3-opus-20240229",
+            model="claude-3",
             max_tokens=1000,
             system=system_prompt,
             messages=[{
